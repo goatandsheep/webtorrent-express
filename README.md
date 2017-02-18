@@ -5,11 +5,12 @@
 
 ##Plan
 
-1. Download file from one of the web seeds for initial creation and seeding of file.
-2. Add web seeds to torrent
-3. Save infohash in database or file
-4. Delete .torrent & file
-5. Test downloading on [btorrent](https://btorrent.xyz/).
+- [ ] Initial creation of torrent
+- [ ] Add web seeds to torrent
+- [ ] Download file from remote
+- [ ] Save infohash in database or file
+- [ ] Delete .torrent & file
+- [ ] Test downloading on [btorrent](https://btorrent.xyz/).
 
 ##Resources
 
