@@ -1,12 +1,8 @@
 var express = require('express')
-// var webtorrent = require('create-torrent')
+var createTorrent = require('create-torrent')
 var path = require('path');
 var http = require('http');
 var fs = require('fs')
-
-var bcrypt = require('bcrypt')
-const saltRounds = 10;
-const myPlaintextPassword = 's0/\/\P4$$w0rD';
 
 var app = express()
 // var client = new webtorrent()
@@ -23,57 +19,64 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
-function seedFile (err, file) {
-  if (err) throw err;
-  console.log(file.filename)
-  console.log(file.name)
+// function seedFile (err, file) {
+//   if (err) throw err;
+//   console.log(file.filename)
+//   console.log(file.name)
   
-  client.seed(file, function (torrent) {
-    // TODO: save magnetURI in database
-    console.log('Client is seeding ' + torrent.magnetURI)
-    // console.log('Client is seeding ' + torrent.infoHash)
-    console.log(torrent.files[0].length)
-    console.log(torrent.files[0].name)
-    // TODO: add webseed
-  });
-}
+//   createTorrent(file, function (torrent) {
+//     // TODO: save magnetURI in database
+//     console.log('Client is seeding ' + torrent.magnetURI)
+//     // console.log('Client is seeding ' + torrent.infoHash)
+//     console.log(torrent.files[0].length)
+//     console.log(torrent.files[0].name)
+//     // TODO: add webseed
+//   });
+// }
 
 
 // app.listen(3000, function () {
 app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
   console.log('Example app listening on port 3000!')
   
-  var filename = "torchbearer2010.JPG"
+  var filename = "jquery-3.1.1.min.js"
   function ribbons() {
     console.log(filename)
   }
 // 	fs.open(filename, 'r', seedFile);
 	
 // 	fs.open(filename, 'r', function seedeFile (err, file) {
-  fs.readFile(filename, function seedeFile (err, file) {
+  fs.readFile(filename, function seedeFile (err, filey) {
     if (err) throw err;
     
-    file.name = filename
+    if (Buffer.isBuffer(filey)) {
+      console.log("hey")
+    }
     
+    filey.name = filename
+    console.log(filey.length)
     
-
-bcrypt.genSalt(saltRounds, function(err, salt) {
-    bcrypt.hash(myPlaintextPassword, salt, function(err, hash) {
-        console.log("bcrypt: ")
-        console.log(hash)
-    });
-});
+    var webSeeds = ["https://code.jquery.com/jquery-3.1.1.min.js"]
+    var opts = {
+      urlList: webSeeds
+    }
     
-    /*
-    client.seed(file, function (torrent) {
+    createTorrent(filey, opts, function (torrent) {
+      console.log(filey.length)
+      if (err) throw err
+      
+      fs.writeFile('my.torrent', torrent)
+      
+      // Note: `create-torrent file -o my.torrent` works
+      
       // TODO: save magnetURI in database
-      console.log('Client is seeding ' + torrent.magnetURI)
+      console.log('Client is seeding ' + torrent)
       // console.log('Client is seeding ' + torrent.infoHash)
-      console.log(torrent.files[0].length)
-      console.log(torrent.files[0].name)
+      // console.log(torrent.files[0].length)
+      // console.log(torrent.files[0].name)
       // TODO: add webseed
     });
-    */
+    
   })
 	
 })
